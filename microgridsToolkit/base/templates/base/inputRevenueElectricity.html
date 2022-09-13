@@ -1,0 +1,367 @@
+{% extends 'base/main.html' %}
+
+{% block title %}
+    <div class="p-2" style="display:flex; justify-content: flex-center"><h1>Revenue and electricity consumption</h1></div>
+{% endblock title %}
+
+{% block content %}
+
+<style>
+    .container-box{
+        padding: 15px 30px 0px 30px;
+    }
+</style>
+
+<hr>
+
+<div class="d-flex align-items-start">
+    <div class="nav flex-column nav-pills me-5" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <button class="nav-link active" id="v-pills-average-tab" data-bs-toggle="pill" data-bs-target="#v-pills-average" type="button" role="tab" aria-controls="v-pills-average" aria-selected="true">Average consumption</button>
+        <button class="nav-link" id="v-pills-growth-tab" data-bs-toggle="pill" data-bs-target="#v-pills-growth" type="button" role="tab" aria-controls="v-pills-growth" aria-selected="false">Growth</button>
+        <button class="nav-link" id="v-pills-options-tab" data-bs-toggle="pill" data-bs-target="#v-pills-options" type="button" role="tab" aria-controls="v-pills-options" aria-selected="false">Option Selection</button>
+        <button class="nav-link" id="v-pills-rates-tab" data-bs-toggle="pill" data-bs-target="#v-pills-rates" type="button" role="tab" aria-controls="v-pills-rates" aria-selected="false">Rates</button>
+        <button class="nav-link" id="v-pills-possible-tab" data-bs-toggle="pill" data-bs-target="#v-pills-possible" type="button" role="tab" aria-controls="v-pills-possible" aria-selected="false">Possible changes in revenue pricing</button>
+    </div>
+    <div class="tab-content" id="v-pills-tabContent">
+        <div class="tab-pane fade show active" id="v-pills-average" role="tabpanel" aria-labelledby="v-pills-average-tab">
+            <form action="{% url 'revenueAverage' id %}" method="POST">
+                {% csrf_token %}
+                <!-- <h1 style="text-align: center;">Consumption - monthly</h1> -->
+                <div class="row">
+                    <div class="col">
+                        <label for="averageresidentialInput" class="form-label">Average estimated monthly consumption per residential dwelling</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="rev_ResidentialConsump" value="{{queryAve.rev_ResidentialConsump}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> 
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="rev_ResidentialConsumpUnit" value="{{queryAve.rev_ResidentialConsumpUnit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="averagecomercialInput" class="form-label">Average estimated monthly consumption per comercial dwelling</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="rev_CommercialConsump" value="{{queryAve.rev_CommercialConsump}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> 
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="rev_CommercialConsumpUnit" value="{{queryAve.rev_CommercialConsumpUnit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" name="rev_Notes" id="rev_Notes" rows="3">{{queryAve.rev_Notes}}</textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="source" class="form-label">Source</label>
+                        <textarea class="form-control" name="rev_Source" id="rev_Source" rows="3">{{queryAve.rev_Source}}</textarea>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button style="float: right;" type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>
+        <div class="tab-pane fade" id="v-pills-growth" role="tabpanel" aria-labelledby="v-pills-growth-tab">
+            <form action="{% url 'revenueGrowth' id %}" method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col">
+                        <label for="commercialgrowthInput" class="form-label">Estimated growth in commercial load every year</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="rev_CommercialGrowth" value="{{queryGro.rev_CommercialGrowth}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> 
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="rev_CommercialGrowthUnit" value="{{queryGro.rev_CommercialGrowthUnit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="residentialgrowthInput" class="form-label">Estimated growth in residential load every year</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="rev_ResidentialGrowth" value="{{queryGro.rev_ResidentialGrowth}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> 
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="rev_ResidentialGrowthUnit" value="{{queryGro.rev_ResidentialGrowthUnit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                
+                <br>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" name="rev_Notes" id="rev_Source" rows="3">{{queryGro.rev_Notes}}</textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="source" class="form-label">Source</label>
+                        <textarea class="form-control" name="rev_Source" id="rev_Source" rows="3">{{queryGro.rev_Source}}</textarea>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button style="float: right;" type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>
+        <div class="tab-pane fade" id="v-pills-options" role="tabpanel" aria-labelledby="v-pills-options-tab">
+            <form action="{% url 'revenueOptions' id %}" method="POST">
+                {% csrf_token %}
+                {% comment %} <h4 style="font-weight: bolder;">Select up to 3 revenue options for comparison</h4> {% endcomment %}
+                <h4 style="font-weight: bolder;">Fill the information for revenue option 3</h4>
+                <br>
+                {% comment %} <div class="row">
+                    <div class="col" >
+                        <label class="form-label">Option 1 - Fixed cost per residential and commercial dwellings</label>
+                    </div>
+                    <div class="col">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="True" id="rev_FixedCostOp1" name="rev_FixedCostOp1">
+                            <label class="form-check-label" for="rev_FixedCostOp1">Select</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col" >
+                        <label class="form-label">Option 2 - Per kWh consumed per residential and commercial dwellings</label>
+                    </div>
+                    <div class="col" >
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="rev_KwhConsumpOp2" name="FixedCostOp1">
+                            <label class="form-check-label" for="rev_KwhConsumpOp2">
+                                Select
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col" >
+                        <label class="form-label">Option 3 - Fixed cost + per kWh consumed for residential and commercial dwellings</label>
+                    </div>
+                    <div class="col" >
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="rev_FixedCostKwhOp3" name="FixedCostKwhOp3">
+                            <label class="form-check-label" for="rev_FixedCostKwhOp3">
+                                Select
+                            </label>
+                        </div>
+                    </div>
+                </div> {% endcomment %}
+
+                <div class="row">
+                    <div class="col">
+                        <label for="rev_UnchargedResidentialOp3" class="form-label">Option 3 - Uncharged energy allowance for residentials under fixed costs</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" aria-describedby="rev_UnchargedResidentialOp3" name="rev_UnchargedResidentialOp3" value="{{queryOpt.rev_UnchargedResidentialOp3}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> 
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="rev_UnchargedResidentialOp3Unit" value="{{queryOpt.rev_UnchargedResidentialOp3Unit}}" placeholder="Units" style="margin-top: 56px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="rev_UnchargedCommercialOp3" class="form-label">Option 3 - Uncharged energy allowance for commercial under fixed costs</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" aria-describedby="rev_UnchargedCommercialOp3" name="rev_UnchargedCommercialOp3" value="{{queryOpt.rev_UnchargedCommercialOp3}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> 
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="rev_UnchargedCommercialOp3Unit" value="{{queryOpt.rev_UnchargedCommercialOp3Unit}}" placeholder="Units" style="margin-top: 56px; text-align: center">
+                    </div>
+                </div>
+                
+                <br>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" name="rev_Notes" id="rev_Notes" rows="3">{{queryOpt.rev_Notes}}</textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="source" class="form-label">Source</label>
+                        <textarea class="form-control" name="rev_Source" id="rev_Source" rows="3">{{queryOpt.rev_Source}}</textarea>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button style="float: right;" type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>
+        <div class="tab-pane fade" id="v-pills-rates" role="tabpanel" aria-labelledby="v-pills-rates-tab">
+            <form action="{% url 'revenueRates' id %}" method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col">
+                        <label for="rev_FixedCostResidentialOp1" class="form-label">Option 1 - Fixed cost per residential rate</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" aria-describedby="rev_FixedCostResidentialOp1" name="rev_FixedCostResidentialOp1" value="{{queryRat.rev_FixedCostResidentialOp1}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> 
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="rev_FixedCostResidentialOp1Unit" value="{{queryRat.rev_FixedCostResidentialOp1Unit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="rev_FixedCostCommercialOp1" class="form-label">Option 1 - Fixed cost per commercial dwelling rate</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" aria-describedby="rev_FixedCostCommercialOp1" name="rev_FixedCostCommercialOp1" value="{{queryRat.rev_FixedCostCommercialOp1}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> 
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="rev_FixedCostCommercialOp1Unit" value="{{queryRat.rev_FixedCostCommercialOp1Unit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+
+                <br>
+                
+                <div class="row">
+                    <div class="col">
+                        <label for="rev_KwhResidentialOp2" class="form-label">Option 2 - Per kWh consumed for residential</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" aria-describedby="rev_KwhResidentialOp2" name="rev_KwhResidentialOp2" value="{{queryRat.rev_KwhResidentialOp2}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> 
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="rev_KwhResidentialOp2Unit" value="{{queryRat.rev_KwhResidentialOp2Unit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="rev_kwhCommercialOp2" class="form-label">Option 2 - Per kWh consumed for commercial</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" aria-describedby="rev_kwhCommercialOp2" name="rev_kwhCommercialOp2" value="{{queryRat.rev_kwhCommercialOp2}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> 
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="rev_kwhCommercialOp2Unit" value="{{queryRat.rev_kwhCommercialOp2Unit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="rev_FixedCostResidentialOp3" class="form-label">Option 3 - Fixed cost for residentials</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" aria-describedby="rev_FixedCostResidentialOp3" name="rev_FixedCostResidentialOp3" value="{{queryRat.rev_FixedCostResidentialOp3}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> 
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="rev_FixedCostResidentialOp3Unit" value="{{queryRat.rev_FixedCostResidentialOp3Unit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="rev_FixedCostCommercialOp3" class="form-label">Option 3 - Fixed cost for commercial</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" aria-describedby="rev_FixedCostCommercialOp3" name="rev_FixedCostCommercialOp3" value="{{queryRat.rev_FixedCostCommercialOp3}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> 
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="rev_FixedCostCommercialOp3Unit" value="{{queryRat.rev_FixedCostCommercialOp3Unit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="rev_KwhResidentialOp3" class="form-label">Option 3 - Per kWh consumed for residentials</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" aria-describedby="rev_KwhResidentialOp3" name="rev_KwhResidentialOp3" value="{{queryRat.rev_KwhResidentialOp3}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> 
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="rev_KwhResidentialOp3Unit" value="{{queryRat.rev_KwhResidentialOp3Unit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="rev_KwhCommercialOp3" class="form-label">Option 3 - Per kWh consumed for commercial</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" aria-describedby="rev_KwhCommercialOp3" value="{{queryRat.rev_KwhCommercialOp3}}" name="rev_KwhCommercialOp3" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> 
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="rev_KwhCommercialOp3Unit" value="{{queryRat.rev_KwhCommercialOp3Unit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                                
+                <br>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" name="rev_Notes" id="rev_Notes" rows="3">{{queryRat.rev_Notes}}</textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="source" class="form-label">Source</label>
+                        <textarea class="form-control" name="rev_Source" id="rev_Source" rows="3">{{queryRat.rev_Source}}</textarea>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button style="float: right;" type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>
+        <div class="tab-pane fade" id="v-pills-possible" role="tabpanel" aria-labelledby="v-pills-possible-tab">
+            <form action="{% url 'revenueChanges' id %}" method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col">
+                        <label for="rev_FirstPriceRise" class="form-label">Year of first price rise</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" value="{{queryCha.rev_FirstPriceRise}}" name="rev_FirstPriceRise" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> 
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="rev_FirstYearPercentage" value="{{queryCha.rev_FirstYearPercentage}}" placeholder="% Rise" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="rev_SecondPriceRise" class="form-label">Year of second price rise</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" value="{{queryCha.rev_SecondPriceRise}}" name="rev_SecondPriceRise" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> 
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="rev_SecondYearPercentage" value="{{queryCha.rev_SecondYearPercentage}}" placeholder="% Rise" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="rev_ThirdPriceRise" class="form-label">Year of third price rise</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" value="{{queryCha.rev_ThirdPriceRise}}" name="rev_ThirdPriceRise" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> 
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="rev_ThirdYearPercentage" value="{{queryCha.rev_ThirdYearPercentage}}" placeholder="% Rise" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="rev_FourthPriceRise" class="form-label">Year of fourth price rise</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" value="{{queryCha.rev_FourthPriceRise}}" name="rev_FourthPriceRise" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> 
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="rev_FourthYearPercentage" value="{{queryCha.rev_FourthYearPercentage}}" placeholder="% Rise" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="rev_FifthPriceRise" class="form-label">Year of fifth price rise</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" value="{{queryCha.rev_FifthPriceRise}}" name="rev_FifthPriceRise" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> 
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="rev_FifthYearPercentage" value="{{queryCha.rev_FifthYearPercentage}}" placeholder="% Rise" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                                                
+                <br>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" name="rev_Notes" id="rev_Notes" rows="3">{{queryCha.rev_Notes}}</textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="source" class="form-label">Source</label>
+                        <textarea class="form-control" name="rev_Source" id="rev_Source" rows="3">{{queryCha.rev_Source}}</textarea>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button style="float: right;" type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

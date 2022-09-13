@@ -1,0 +1,165 @@
+{%extends 'base/main.html'%}
+
+{% block title %}
+    <div class="p-2 flex-shrink-1 justify-content-center" style="display:flex; justify-content: flex-center"><h1>Carbon Results</h1></div>
+{% endblock title %}
+
+{%block content%}
+
+<style>
+    .container-box{
+        padding: 10px 25px 50px 25px;
+        margin: 0px -160px 20px -160px;
+    }
+</style>
+
+<div style="padding-top: 10px;">
+    <hr style="margin: 0px;">
+
+    <div class="row" style="padding-top: 10px">
+        <div class="col-6">
+            <div>
+                <h3>Emissions results vs current fuel</h3>
+            </div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Value</th>
+                        <th scope="col">Unit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {% if residentialFuel == 'Kerosene' or residentialFuel == 'Wood' or residentialFuel == 'Diesel' %}
+                            <td style="text-align:left">Residential current fuel</td>
+                            <td>{{residentialFuel}}</td>
+                            <td></td>
+                        {% else %}
+                            <td style="text-align:left">Residential current fuel</td>
+                            <td>Not selected</td>
+                            <td></td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <td style="text-align:left"> Average annual residential emissions saved</td>
+                        <td>{{averageResidential}}</td>
+                        <td>{{emissionCarUnit}}</td>
+                    </tr>
+                    <tr>
+                        {% if commercialFuel == 'Kerosene' or commercialFuel == 'Wood' or commercialFuel == 'Diesel' %}
+                            <td style="text-align:left">Commercial current fuel</td>
+                            <td>{{commercialFuel}}</td>
+                            <td></td>
+                        {% else %}
+                            <td style="text-align:left">Commercial current fuel</td>
+                            <td>{{commercialFuel}}</td>
+                            <td></td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <td style="text-align:left"> Average annual commercial emissions saved</td>
+                        <td>{{averageCommercial}}</td>
+                        <td>{{emissionCarUnit}}</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:left"> Total annual emissions savings in no. of cars</td>
+                        <td>{{equivalentCars1}}</td>
+                        <td>Cars</td>
+                    </tr>
+                    <tr>
+                        <th style="text-align:left"> Total lifetime emissions savings</th>
+                        <th>{{totalSavings1}}</th>
+                        <th>kgCO2e</th>
+                    </tr>
+                </tbody>
+            </table>
+
+            <br>
+            <br>
+
+            <div>
+                <h3>Emissions results vs grid</h3>
+            </div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Value</th>
+                        <th scope="col">Unit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="text-align:left"> Average annual emissions savings</td>
+                        <td>{{anualEmissions}}</td>
+                        <td>{{emissionCarUnit}}</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:left"> Total annual emissions savings in no. of cars</td>
+                        <td>{{equivalentCars2}}</td>
+                        <td>Cars</td>
+                    </tr>
+                    <tr>
+                        <th style="text-align:left"> Total lifetime emissions savings</th>
+                        <th>{{totalSavings2}}</th>
+                        <th>kgCO2e</th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    <br>
+    <br>
+
+        <div class="col-6">
+            <div class="container" style="width: 86%; padding-top: 50px; display: flex; align-items: center; justify-content: center;">
+                <canvas id="emissionChart" width="20" height="20"></canvas>
+            </div>  
+        </div>
+    </div>
+    <br>
+    <br>
+</div>
+<script>
+    var totalSavings1 = "{{totalSavings1Chart}}";
+    var totalSavings2 = "{{totalSavings2Chart}}";
+
+    const ctx1 = document.getElementById('emissionChart').getContext('2d');
+    const myChart1 = new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: ['Vs Current fuels', 'Vs Grid'],
+            datasets: [
+                {
+                    data: [totalSavings1, totalSavings2],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(30, 130, 76, 1)',
+                    ],
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(30, 130, 76, 1)',
+                    ]
+                },
+            ]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                title: {
+                display: true,
+                text: 'Microgrid lifetime emissions savings',
+                },
+                legend: {
+                    display: false,
+                },
+            }
+        }
+    });
+</script>
+
+{%endblock content%}

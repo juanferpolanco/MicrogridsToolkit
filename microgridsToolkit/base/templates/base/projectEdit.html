@@ -1,0 +1,40 @@
+{% extends 'base/main.html'%}
+
+{% block title %} Edit the project info {% endblock %}
+
+{% block content %}
+
+<style>
+    .container-box{
+        padding: 15px 30px 10px 30px;
+    }
+</style>
+
+<h1 style="text-align:center;">Edit a project</h1>
+
+<hr>
+<br>
+<form action="" method="POST">
+    {% csrf_token %}
+
+    <div class="form-group">
+        <label for="exampleFormControlInput1">Project name</label>
+        <input type="text" class="form-control" name="prj_name" id="prj_name" value="{{prj.prj_name}}">
+    </div>
+
+    <br>
+
+    <div class="form-group">
+        <label for="exampleFormControlInput1">Description</label>
+        <textarea class="form-control" name="prj_description" id="prj_description" rows="2">{{prj.prj_description}}</textarea>
+    </div>
+
+    <br>
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+        <a class="btn btn-danger btnCancel" href="{% url 'project-list' %}" role="button">Cancel</a>
+        <button type="submit" class="btn btn-success btnSave">Save</button>
+    </div>
+
+</form>
+{% endblock content %}

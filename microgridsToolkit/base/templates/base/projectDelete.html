@@ -1,0 +1,34 @@
+{% extends 'base/main.html'%}
+
+{% block title %} Delete the project {% endblock %}
+
+{% block content %}
+
+<style>
+    .container-box{
+        padding: 15px 30px 10px 30px;
+    }
+</style>
+
+<h1 style="text-align:center;">Delete a project</h1>
+
+<hr>
+<form action="" method="POST">
+    {% csrf_token %}
+    <div class="mb-3 mx-auto" style="width: 600px;">
+
+        <h3>Are you sure you want to delete this project?</h3>
+        <br>
+        <h5>Name: {{prj.prj_name}}</h5>
+        <h5>Description: {{prj.prj_description}}</h5>
+        <h5>Date created: {{prj.prj_datecreated}}</h5>
+        
+        <br>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+            <a class="btn btn-danger btnCancel" href="{% url 'project-list' %}" role="button">Cancel</a>
+            <button type="submit" class="btn btn-warning btnDelete">Delete</button>
+        </div>
+    </div>
+</form>
+{% endblock content %}

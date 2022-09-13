@@ -1,0 +1,126 @@
+{%extends 'base/main.html'%}
+
+{%block content%}
+
+<style>
+    .container-box{
+        padding: 15px 30px 10px 30px;
+    }
+</style>
+
+<div class="d-flex flex-row align-items-center justify-content-around" >
+    <div class="p-2 justify-content-start">
+    </div>
+    <div class="p-2 flex-shrink-1 justify-content-center">
+        <h1>Project Details</h1>
+    </div>
+    <div class="p-2 flex-shrink-1 justify-content-end">
+        <a class="btn btn-danger" href="{% url 'project-list' %}" role="button">My Projects</a>
+    </div>
+  </div>
+
+<hr>
+
+<h4><a class="btn btn-secundary btn-block" role="button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+            <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+        </svg>
+    </a>
+    If numeric information unavailabe, enter 0
+</h4>
+
+<div class="row">
+    <div class="col-sm-4">
+        <a href="{% url 'general' id %}" style="text-decoration: none; color: inherit;">
+            <div class="card">
+                <div class="card-header"></div>
+                <div class="card-body">
+                    <h5 class="card-title">General</h5>
+                    <p class="card-text">Section for location, demography, incomes, current fuel, discounts, time periods, and tier information.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-sm-4">
+        <a href="{% url 'plantExpenditure' id %}" style="text-decoration: none; color: inherit;">
+            <div class="card">
+                <div class="card-header"></div>
+                <div class="card-body">
+                    <h5 class="card-title">Plant Expenditure and Information</h5>
+                    <p class="card-text">Section for details of the plant size, capital expenditure, operational expenditure, replacement expenditure and subsidy information.</p>
+                
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-sm-4">
+        <a href="{% url 'revenueElectricity' id %}" style="text-decoration: none; color: inherit;">
+            <div class="card">
+                <div class="card-header"></div>
+                <div class="card-body">
+                    <h5 class="card-title">Revenue and Electricity Consumption</h5>
+                    <p class="card-text">Section for average consumptions, growths, options selection, rates and possible changes in pricing.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+<div class="row" style="margin-top: 1rem;">
+    <div class="col-sm-4">
+        <a href="{% url 'co2' id %}" style="text-decoration: none; color: inherit;">
+            <div class="card">
+                <div class="card-header"></div>
+                <div class="card-body">
+                    <h5 class="card-title">Co2</h5>
+                    <p class="card-text">Section for current carbon factor for grid, diesel, wood logs and kerosene. kWh produced and emission from an average car.</p>
+                
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+<br>
+<hr>
+
+
+<div class="row" style="margin-top: 3rem;">
+    <div class="col-sm-4">
+        <a href="{% url 'resultsOverview' id %}" style="text-decoration: none; color: inherit;">
+            <div class="card">
+                <div class="card-header"></div>
+                <div class="card-body">
+                    <h5 class="card-title">Project Overview</h5>
+                    <p class="card-text">Informative summary of the project.
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </p>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-sm-4">
+        <a href="{% url 'resultsCarbon' id %}" style="text-decoration: none; color: inherit;">
+            <div class="card">
+                <div class="card-header"></div>
+                <div class="card-body">
+                    <h5 class="card-title">Carbon Results</h5>
+                    <p class="card-text">Comparison between current fuel emissions and grid emissions.</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-sm-4">
+        <a href="{% url 'resultsEconomic' id %}" style="text-decoration: none; color: inherit;">
+            <div class="card">
+                <div class="card-header"></div>
+                <div class="card-body">
+                    <h5 class="card-title">Economic Results</h5>
+                    <p class="card-text">Estimated results for the total expenditure of the project.</p>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+{% endblock content %}

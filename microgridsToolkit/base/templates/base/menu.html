@@ -1,0 +1,39 @@
+{%extends 'base/main.html'%}
+{%block content%}
+
+    <style>
+        .container-box{
+            padding: 15px 30px 10px 30px;
+        }
+    </style>
+
+    <br>
+    <h1 style="text-align: left;">Hello {{ user.username }}</h1>
+    <hr>
+    <div class="row">
+        <div class="col-sm-4">
+            <a href="{% url 'project-list' %}" style="text-decoration: none; color: inherit;">
+                <div class="card">
+                    <div class="card-header"></div>
+                    <div class="card-body">
+                        <h5 class="card-title">Projects</h5>
+                        <p class="card-text">See all your projects previously created.</p>
+                    </div>
+                </div>
+            </a>
+        </div>  
+        <div class="col-sm-4">
+            <a href="{% url 'changePassword' %}" style="text-decoration: none; color: inherit;">
+                <div class="card">
+                    <div class="card-header"></div>
+                    <div class="card-body">
+                        <h5 class="card-title">Change Password</h5>
+                        <p class="card-text">Change your current password.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <br>
+
+{%endblock content%}

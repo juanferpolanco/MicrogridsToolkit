@@ -1,0 +1,455 @@
+{% extends 'base/main.html' %}
+
+{% block title %}
+    <div class="p-2" style="display:flex; justify-content: flex-center"><h1>General</h1></div>
+{% endblock title %}
+
+{% block content %}
+
+<style>
+    .container-box{
+        padding: 15px 30px 0px 30px;
+    }
+</style>
+
+<hr>
+
+<div class="d-flex align-items-start">
+    <div class="nav flex-column nav-pills me-5" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <button class="nav-link active" id="v-pills-location-tab" data-bs-toggle="pill" data-bs-target="#v-pills-location" type="button" role="tab" aria-controls="v-pills-location" aria-selected="true">Location Details</button>
+        <button class="nav-link" id="v-pills-demography-tab" data-bs-toggle="pill" data-bs-target="#v-pills-demography" type="button" role="tab" aria-controls="v-pills-demography" aria-selected="false">Demography</button>
+        <button class="nav-link" id="v-pills-income-tab" data-bs-toggle="pill" data-bs-target="#v-pills-income" type="button" role="tab" aria-controls="v-pills-income" aria-selected="false">Income and Willingness to Pay</button>
+        <button class="nav-link" id="v-pills-currentfuel-tab" data-bs-toggle="pill" data-bs-target="#v-pills-currentfuel" type="button" role="tab" aria-controls="v-pills-currentfuel" aria-selected="false">Current Fuel</button>
+        <button class="nav-link" id="v-pills-discount-tab" data-bs-toggle="pill" data-bs-target="#v-pills-discount" type="button" role="tab" aria-controls="v-pills-discount" aria-selected="false">Discount Rates</button>
+        <button class="nav-link" id="v-pills-time-tab" data-bs-toggle="pill" data-bs-target="#v-pills-time" type="button" role="tab" aria-controls="v-pills-time" aria-selected="false">Time</button>
+        <button class="nav-link" id="v-pills-tier-tab" data-bs-toggle="pill" data-bs-target="#v-pills-tier" type="button" role="tab" aria-controls="v-pills-tier" aria-selected="false">Tier</button>
+    </div>
+    <div class="tab-content"  id="v-pills-tabContent">
+        <div class="tab-pane fade show active" id="v-pills-location" role="tabpanel" aria-labelledby="v-pills-location-tab">
+            <form action="{% url 'generalLocation' id %}" method="POST">
+                {% if mensaje %}
+                    <div class="alert alert-danger" role="alert">
+                        {{mensaje}}
+                    </div>
+                {% endif %}
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col">
+                        <label for="namesettlementInput" class="form-label">Name of settlement</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="gen_SettlementName" value="{{queryLoc.gen_SettlementName}}">  
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="regionInput" class="form-label">Region/State/Country name</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="gen_StateName" value="{{queryLoc.gen_StateName}}">  
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="countryInput" class="form-label">Country</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="gen_CountryName" value="{{queryLoc.gen_CountryName}}">  
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="currencyInput" class="form-label">Currency</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="gen_Currency" value="{{queryLoc.gen_Currency}}">
+                    </div>
+                </div>
+                
+                <br>
+                
+                <div class="row">
+                    <div class="col">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" name="gen_Notes" id="notes" rows="3">{{queryLoc.gen_Notes}}</textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="source" class="form-label">Source</label>
+                        <textarea class="form-control" name="gen_Source" id="source" rows="3">{{queryLoc.gen_Source}}</textarea>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button style="float: right;" type="submit" class="btn btn-success" onRefresh="return alert('Information saved.');">Submit</button>
+                </div>
+
+            </form>
+            <br>
+        </div>
+        <div class="tab-pane fade " id="v-pills-demography" role="tabpanel" aria-labelledby="v-pills-demography-tab">
+            <form action="{% url 'generalDemography' id %}" method="POST" style="width: 48.5em;">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col">
+                        <label for="populationsettlementInput" class="form-label">Population of settlement</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="gen_PopulationSettlement" value="{{queryDem.gen_PopulationSettlement}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">                      
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="gen_PopulationSettlementUnit" placeholder="Units" value="{{queryDem.gen_PopulationSettlementUnit}}" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="populationconnectedInput" class="form-label">Population to be connected by the microgrid</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="gen_PopulationConnected" value="{{queryDem.gen_PopulationConnected}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="gen_PopulationConnectedUnit" placeholder="Units" value="{{queryDem.gen_PopulationConnectedUnit}}" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="numberresidentialInput" class="form-label">Number of residential properties in the village</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="gen_ResidentialProperties" value="{{queryDem.gen_ResidentialProperties}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="gen_ResidentialPropertiesUnit" placeholder="Units" value="{{queryDem.gen_ResidentialPropertiesUnit}}" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="residentialconnectedInput" class="form-label">Number of residential properties to be connected to the microgrid</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="gen_ResidentialConnected" value="{{queryDem.gen_ResidentialConnected}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="gen_ResidentialConnectedUnit" placeholder="Units" value="{{queryDem.gen_ResidentialConnectedUnit}}" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                
+                <br>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="numbercommercialInput" class="form-label">Number of commercial properties in the region</label>
+                        <input type="text" class="form-control" name="gen_CommercialProperties" value="{{queryDem.gen_CommercialProperties}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="gen_CommercialPropertiesUnit" placeholder="Units" value="{{queryDem.gen_CommercialPropertiesUnit}}" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="commercialconnectedInput" class="form-label">Number of commercial properties to be connected by the microgrid</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="gen_CommercialConnected" value="{{queryDem.gen_CommercialConnected}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="gen_CommercialConnectedUnit" placeholder="Units" value="{{queryDem.gen_CommercialConnectedUnit}}" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                                
+                <br>
+                
+                <div class="row">
+                    <div class="col">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" name="gen_Notes" id="notes" rows="3">{{queryDem.gen_Notes}}</textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="source" class="form-label">Source</label>
+                        <textarea class="form-control" name="gen_Source" id="source" rows="3">{{queryDem.gen_Source}}</textarea>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button style="float: right;" type="submit" class="btn btn-success">Submit</button>
+                </div>
+
+            </form>
+        </div>
+        <div class="tab-pane fade" id="v-pills-income" role="tabpanel" aria-labelledby="v-pills-income-tab">
+            <form action="{% url 'generalIncome' id %}" method="POST">
+                
+                {% csrf_token %}
+                <div class="row">
+                    
+                    <div class="col">
+                        <label for="monthlyincomeresidentialInput" class="form-label">Average monthly income of a residential house</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="gen_ResidentialIncome" value="{{queryInc.gen_ResidentialIncome}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="gen_ResidentialIncomeUnit" placeholder="Units" value="{{queryInc.gen_ResidentialIncomeUnit}}" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="monthlywillingnessresidentialInput" class="form-label">Average monthly willingness to pay - electricity</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="gen_ResidentialWillingness" value="{{queryInc.gen_ResidentialWillingness}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="gen_ResidentialWillingnessUnit" placeholder="Units" value="{{queryInc.gen_ResidentialWillingnessUnit}}" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="monthlyincomecommercialInput" class="form-label">Average monthly income of a commercial property</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="gen_CommercialIncome" value="{{queryInc.gen_CommercialIncome}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="gen_CommercialIncomeUnit" placeholder="Units" value="{{queryInc.gen_CommercialIncomeUnit}}" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="monthlywillingnesscommercialInput" class="form-label">Average monthly willingness to pay - electricity</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="gen_CommercialWillingness" value="{{queryInc.gen_CommercialWillingness}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="gen_CommercialWillingnessUnit" placeholder="Units" value="{{queryInc.gen_CommercialWillingnessUnit}}"style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+
+                <br>
+                
+                <div class="row">
+                    <div class="col">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" name="gen_Notes" id="notes" rows="3">{{queryInc.gen_Notes}}</textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="source" class="form-label">Source</label>
+                        <textarea class="form-control" name="gen_Source" id="source" rows="3">{{queryInc.gen_Source}}</textarea>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button style="float: right;" type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="tab-pane fade" id="v-pills-currentfuel" role="tabpanel" aria-labelledby="v-pills-currentfuel-tab">
+            <form action="{% url 'generalFuel' id %}" method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col">
+                        <label for="fuelusedresidentialInput" class="form-label">Fuel used to meet power demands - residential</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-auto">
+                        <select class="form-select" name="gen_ResidentialFuelUsed">
+                            {% if queryFue.gen_ResidentialFuelUsed is null or queryFue.gen_ResidentialFuelUsed == '' %}
+                                <option selected hidden>Fuel for residential</option>
+                            {% else %}
+                                <option selected hidden>{{queryFue.gen_ResidentialFuelUsed}}</option>
+                            {% endif %}
+                            <option value="Kerosene">Kerosene</option>
+                            <option value="Wood">Wood</option>
+                            <option value="Diesel">Diesel</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="monthlyfuelresidentialInput" class="form-label">Monthly fuel use - residential</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="gen_ResidentialFuelMonthly" value="{{queryFue.gen_ResidentialFuelMonthly}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="gen_ResidentialFuelMonthlyUnit" placeholder="Units" value="{{queryFue.gen_ResidentialFuelMonthlyUnit}}" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="fuelcostresidentialInput" class="form-label">Cost of fuel - residential</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="gen_ResidentialFuelCost" value="{{queryFue.gen_ResidentialFuelCost}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="gen_ResidentialFuelCostUnit" placeholder="Units" value="{{queryFue.gen_ResidentialFuelCostUnit}}" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="fuelusedcommercialInput" class="form-label">Fuel used to meet power demands - commercial</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-auto">
+                        <select class="form-select" name="gen_CommercialFuelUsed">
+                            {% if queryFue.gen_CommercialFuelUsed is null or queryFue.gen_CommercialFuelUsed == '' %}
+                                <option selected hidden>Fuel for commercial</option>
+                            {% else %}
+                                <option selected hidden>{{queryFue.gen_CommercialFuelUsed}}</option>
+                            {% endif %}
+                            <option value="Kerosene">Kerosene</option>
+                            <option value="Wood">Wood</option>
+                            <option value="Diesel">Diesel</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="monthlyfuelcommercialInput" class="form-label">Monthly fuel use - commercial</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="gen_CommercialFuelMonthly" value="{{queryFue.gen_CommercialFuelMonthly}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="gen_CommercialFuelMonthlyUnit" placeholder="Units" value="{{queryFue.gen_CommercialFuelMonthlyUnit}}" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="fuelcostcommercialInput" class="form-label">Cost of fuel - commercial</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="gen_CommercialFuelCost" value="{{queryFue.gen_CommercialFuelCost}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="gen_CommercialFuelCostUnit" placeholder="Units" value="{{queryFue.gen_CommercialFuelCostUnit}}" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" name="gen_Notes" id="notes" rows="3">{{queryFue.gen_Notes}}</textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="source" class="form-label">Source</label>
+                        <textarea class="form-control" name="gen_Source" id="source" rows="3">{{queryFue.gen_Source}}</textarea>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button style="float: right;" type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="tab-pane fade" id="v-pills-discount" role="tabpanel" aria-labelledby="v-pills-discount-tab">
+            <form action="{% url 'generalDiscount' id %}" method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col">
+                        <label for="discountrateInput" class="form-label">Discount rate of the project</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="gen_DiscountRate" value="{{queryDis.gen_DiscountRate}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="gen_DiscountRateUnit" placeholder="Units" value="{{queryDis.gen_DiscountRateUnit}}" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" name="gen_Notes" id="notes" rows="3">{{queryDis.gen_Notes}}</textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="source" class="form-label">Source</label>
+                        <textarea class="form-control" name="gen_Source" id="source" rows="3">{{queryDis.gen_Source}}</textarea>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button style="float: right;" type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="tab-pane fade" id="v-pills-time" role="tabpanel" aria-labelledby="v-pills-time-tab">
+            <form action="{% url 'generalTime' id %}" method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col">
+                        <label for="startingyearInput" class="form-label">Starting Year</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="gen_StartingYear" value="{{queryTim.gen_StartingYear}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+                    </div>
+                </div> 
+                <div class="row">
+                    <div class="col">
+                        <label for="projectionperiodInput" class="form-label">Projection Period</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="gen_ProjectionPeriod" value="{{queryTim.gen_ProjectionPeriod}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="gen_ProjectionPeriodUnit" placeholder="Units" value="{{queryTim.gen_ProjectionPeriodUnit}}" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="monthsnumberInput" class="form-label">Number of months in a year</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="gen_MonthsNumber" value="{{queryTim.gen_MonthsNumber}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="gen_MonthsNumberUnit" placeholder="Units" value="{{queryTim.gen_MonthsNumberUnit}}" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" name="gen_Notes" id="notes" rows="3">{{queryTim.gen_Notes}}</textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="source" class="form-label">Source</label>
+                        <textarea class="form-control" name="gen_Source" id="source" rows="3">{{queryTim.gen_Source}}</textarea>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button style="float: right;" type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="tab-pane fade" id="v-pills-tier" role="tabpanel" aria-labelledby="v-pills-tier-tab">
+            <form action="{% url 'generalTier' id %}" method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col">
+                        <label for="worldbanktierInput" class="form-label">World Bank Tier</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="gen_WorldBankTier" value="{{queryTie.gen_WorldBankTier}}">  
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="gen_WorldBankTierUnit" placeholder="Units" value="{{queryTie.gen_WorldBankTierUnit}}" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" name="gen_Notes" id="notes" rows="3">{{queryTie.gen_Notes}}</textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="source" class="form-label">Source</label>
+                        <textarea class="form-control" name="gen_Source" id="source" rows="3">{{queryTie.gen_Source}}</textarea>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button style="float: right;" type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,603 @@
+{%extends 'base/main.html'%}
+
+{% block title %}
+    <div class="p-2 flex-shrink-1 justify-content-center" style="display:flex; justify-content: flex-center"><h1>Economic Results</h1></div>
+{% endblock title %}
+
+{%block content%}
+
+<style>
+    .container-box{
+        padding: 10px 25px 10px 25px;
+        margin: 0px -160px 20px -160px;
+    }
+</style>
+
+<div class="row" style="margin: -7px;">
+    <div class="col-11">
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="pills-Economic-tab" data-bs-toggle="pill" data-bs-target="#pills-Economic" type="button" role="tab" aria-controls="pills-Economic" aria-selected="true">Economic results summary (inc subsidies)</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-Capex-tab" data-bs-toggle="pill" data-bs-target="#pills-Capex" type="button" role="tab" aria-controls="pills-Capex" aria-selected="false">Capex breakdown</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-Revenue-tab" data-bs-toggle="pill" data-bs-target="#pills-Revenue" type="button" role="tab" aria-controls="pills-Revenue" aria-selected="false">Revenue options</button>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+<hr style="margin: 0px;">
+
+<div class="tab-content " id="pills-tabContent" >
+    <div class="tab-pane fade show active" id="pills-Economic" role="tabpanel" aria-labelledby="pills-Economic-tab">
+        <div class="row">
+            <div class="col-6" style="padding-top: 74px">
+                <div>
+                    <h3>Economic results summary (inc subsidies)</h3>
+                </div>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Value</th>
+                            <th scope="col">Unit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align:left">Total Capex</td>
+                            <td>{{totalCapex}}</td>
+                            <td>{{currency}}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left">Total Opex - lifetime</td>
+                            <td>{{totalOpex}}</td>
+                            <td>{{currency}}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left">Total Repex and upgrade costs - lifetime</td>
+                            <td>{{totalREPEX}}</td>
+                            <td>{{currency}}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left">Discount rate of the project</td>
+                            <td>{{discountRate}}</td>
+                            <td>{{discountUnit}}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left">Levelised Cost of Energy (LCOE)</td>
+                            <td>{{levelisedCostOfEnergy}}</td>
+                            <td>{{currency}}/{{batteryUnit}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <br>
+            <br>
+
+            <div class="col-6" style="padding-top: 15px">
+                <div class="container" style="width: 75%; display: flex; align-items: center; justify-content: center;">
+                    <canvas id="costChart" width="20" height="20"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <br>
+    
+    <div class="tab-pane fade" id="pills-Capex" role="tabpanel" aria-labelledby="pills-Capex-tab" ><!--style="width: 1518px; margin: -30px 0 0 -94px"-->
+        <div class="row" style="margin-bottom: -13px;">
+            <div class="col-5">
+                <div>
+                    <h3>Capex breakdown</h3>
+                </div>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Value</th>
+                            <th scope="col">Unit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align:left">Land</td>
+                            <td>{{land}}</td>
+                            <td>{{currency}}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left">PV panels, turbines, etc.</td>
+                            <td>{{panelsTurbines}}</td>
+                            <td>{{currency}}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left">Switchgear</td>
+                            <td>{{switchgear}}</td>
+                            <td>{{currency}}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left">Protection system</td>
+                            <td>{{protectionSystem}}</td>
+                            <td>{{currency}}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left">Transformer</td>
+                            <td>{{transformer}}</td>
+                            <td>{{currency}}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left">Wiring</td>
+                            <td>{{wiring}}</td>
+                            <td>{{currency}}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left">Meters</td>
+                            <td>{{meters}}</td>
+                            <td>{{currency}}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left">Batteries</td>
+                            <td>{{batteries}}</td>
+                            <td>{{currency}}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left">Inverters</td>
+                            <td>{{inverters}}</td>
+                            <td>{{currency}}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left">Cost of a control setup</td>
+                            <td>{{controlCost}}</td>
+                            <td>{{currency}}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left">Transportation and last mile costs</td>
+                            <td>{{transportationCost}}</td>
+                            <td>{{currency}}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left">Construction and surveys + other upfront project</td>
+                            <td>{{constructionCost}}</td>
+                            <td>{{currency}}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left">Ancillary costs (such as for bulbs, fans ,etc)</td>
+                            <td>{{ancillaryCost}}</td>
+                            <td>{{currency}}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left">Installation costs (at 10% of Capex)</td>
+                            <td>{{installationCostCapex}}</td>
+                            <td>{{currency}}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left">Capex subsidies (at 20% of total Capex)</td>
+                            <td>{{capexSubsidies}}</td>
+                            <td>{{currency}}</td>
+                        </tr>
+                        <tr>
+                            <th style="text-align:left">Total Capex</th>
+                            <th>{{totalCapex}}</th>
+                            <th>{{currency}}</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-7" style="padding-top: 134px">
+                <div class="container" style="width: 102%; display: flex; align-items: center; justify-content: center;">
+                    <canvas id="capitalexpenditureChart" width="100" height="50"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="pills-Revenue" role="tabpanel" aria-labelledby="pills-Revenue-tab"><!--style="width: 1518px; margin: -30px 0 0 -94px"-->
+        <div class="row" style="margin-bottom: -13px;">
+            <div class="col">
+                <div>
+                    <h3>Revenue Options</h3>
+                </div>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                            <th scope="col">Residential properties</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                            <th scope="col">Commercial properties</th>
+                            <th scope="col"></th>
+                            <th scope="col">Pre-tax NPV ({{projectionPeriod}}y)</th>
+                            <th scope="col">Pre-tax IRR ({{projectionPeriod}}y)</th>
+                        </tr>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Year-1 fixed cost</th>
+                            <th scope="col">Year-1 varible cost</th>
+                            <th scope="col">Average annual savings</th>
+                            <th scope="col">Year-1 fixed cost</th>
+                            <th scope="col">Year-1 varible cost</th>
+                            <th scope="col">Average annual savings</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>{{fixedCostResidentialOp1Unit}}</td>
+                            <td>{{kWhresidentialOp2Unit}}</td>
+                            <td>{{currency}}/property/year</td>
+                            <td>{{fixedCostCommercialOp1Unit}}</td>
+                            <td>{{kWhcommercialOp2Unit}}</td>
+                            <td>{{currency}}/property/year</td>
+                            <td>{{currency}}</td>
+                            <td>%</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align:left">
+                                Option 1 - Fixed cost tariff 
+                                <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="In this scenario the properties are only charged a fixed rate per month." data-bs-placement="right" data-bs-content="Right popover">
+                                    <a class="btn btn-secundary btn-block" role="button">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                            <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                                        </svg>
+                                    </a>
+                                </span>
+                            </td>
+                            <td>{{fixedCostResidentialOp1}}</td>
+                            <td>-</td>
+                            <td>{{averageAnnualResidentialBillSavingOp1}}</td>
+                            <td>{{fixedCostCommercialOp1}}</td>
+                            <td>-</td>
+                            <td>{{averageAnnualCommercialBillSavingOp1}}</td>
+                            <td>{{preTaxNPVOption1}}</td>
+                            <td>{{preTaxIRROption1}}%</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left">
+                                Option 2 - Variable cost tariff
+                                <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="In this scenario the properties are only charged a variable charge on the electricity they consume." data-bs-placement="right" data-bs-content="Right popover">
+                                    <a class="btn btn-secundary btn-block" role="button">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                            <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                                        </svg>
+                                    </a>
+                                </span>
+                            </td>
+                            <td>-</td>
+                            <td>{{kWhResidentialOp2}}</td>
+                            <td>{{averageAnnualResidentialBillSavingOp2}}</td>
+                            <td>-</td>
+                            <td>{{kWhcommercialOp2}}</td>
+                            <td>{{averageAnnualCommercialBillSavingOp2}}</td>
+                            <td>{{preTaxNPVOption2}}</td>
+                            <td>{{preTaxIRROption2}}%</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:left">
+                                Option 3 - Combined fixed and variable cost tariff
+                                <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="In this scenario the properties are charged a fixed charge below a benchmark consumption. All electricity consumption post this benchmark is charged using the variable rate. " data-bs-placement="right" data-bs-content="Right popover">
+                                    <a class="btn btn-secundary btn-block" role="button">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                            <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                                        </svg>
+                                    </a>
+                                </span>
+                            </td>
+                            <td>{{fixedCostResidentialOp3}}</td>
+                            <td>{{kWhResidentialOp3}}</td>
+                            <td>{{averageAnnualResidentialBillSavingOp3}}</td>
+                            <td>{{fixedCostCommercialOp3}}</td>
+                            <td>{{kWhCommercialOp3}}</td>
+                            <td>{{averageAnnualCommercialBillSavingOp3}}</td>
+                            <td>{{preTaxNPVOption3}}</td>
+                            <td>{{preTaxIRROption3}}%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row" style="margin-bottom: -13px;">
+            <div class="col-5" style="padding-top: 88px">
+                <div class="container" style="width: 102%; display: flex; align-items: center; justify-content: center;">
+                    <canvas id="NPVIRR" width="100" height="50"></canvas>
+                </div>
+            </div>
+            <div class="col-7" style="padding-top: 28px">
+                <div class="container" style="width: 102%; display: flex; align-items: center; justify-content: center;">
+                    <canvas id="revenueOptionDiscountedOption3" width="100" height="50"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+<br>
+
+<script>
+    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+    return new bootstrap.Popover(popoverTriggerEl)
+    });
+
+    var totalCapex = "{{totalCapexChart}}";
+    var totalOpex = "{{totalOpexChart}}";
+    var totalRepex = "{{totalREPEXChart}}";
+
+    const ctx1 = document.getElementById('costChart').getContext('2d');
+    const myChart1 = new Chart(ctx1, {
+        type: 'pie',
+        data: {
+            labels: ['Total Capex', 'Total Opex - lifetime', 'Total Repex and upgrade cost - lifetime'],
+            datasets: [{
+                label: 'Residentail',
+                data: [totalCapex, totalOpex, totalRepex],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(191, 191, 191, 1)',
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(191, 191, 191, 1)',
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Total cost breakdown',
+                }
+            }
+        }
+    });
+    
+    var land = "{{land}}";
+    var panelsTurbines = "{{panelsTurbines}}";
+    var switchgear = "{{switchgear}}";
+    var protectionSystem = "{{protectionSystem}}";
+    var transformer = "{{transformer}}";
+    var wiring = "{{wiring}}";
+    var meters = "{{meters}}";
+    var batteries = "{{batteries}}";
+    var inverters = "{{inverters}}";
+    var controlCost = "{{controlCost}}";
+    var transportationCost = "{{transportationCost}}";
+    var constructionCost = "{{constructionCost}}";
+    var ancillaryCost = "{{ancillaryCost}}";
+    var installationCostCapex = "{{installationCostCapex}}";
+    var capexSubsidies = "{{capexSubsidies}}";
+
+    var capexDataset = {{ capexBreakdownList | safe}}; 
+    var capexDatasetLabels = {{ capexBreakdownListLabels | safe}};
+    const ctx2 = document.getElementById('capitalexpenditureChart').getContext('2d');
+    const myChart2 = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: capexDatasetLabels,
+            datasets: [
+                {
+                    data: capexDataset,
+                    borderColor: [
+                        'rgba(30, 130, 76, 1)',
+                        'rgba(246, 71, 71, 1)',
+                        'rgba(246, 71, 71, 1)',
+                        'rgba(246, 71, 71, 1)',
+                        'rgba(246, 71, 71, 1)',
+                        'rgba(246, 71, 71, 1)',
+                        'rgba(246, 71, 71, 1)',
+                        'rgba(246, 71, 71, 1)',
+                        'rgba(246, 71, 71, 1)',
+                        'rgba(246, 71, 71, 1)',
+                        'rgba(246, 71, 71, 1)',
+                        'rgba(246, 71, 71, 1)',
+                        'rgba(246, 71, 71, 1)',
+                        'rgba(246, 71, 71, 1)',
+                        'rgba(246, 71, 71, 1)',
+                    ],
+                    backgroundColor: [
+                        'rgba(30, 130, 76, 1)',
+                        'rgba(246, 71, 71, 1)',
+                        'rgba(246, 71, 71, 1)',
+                        'rgba(246, 71, 71, 1)',
+                        'rgba(246, 71, 71, 1)',
+                        'rgba(246, 71, 71, 1)',
+                        'rgba(246, 71, 71, 1)',
+                        'rgba(246, 71, 71, 1)',
+                        'rgba(246, 71, 71, 1)',
+                        'rgba(246, 71, 71, 1)',
+                        'rgba(246, 71, 71, 1)',
+                        'rgba(246, 71, 71, 1)',
+                        'rgba(246, 71, 71, 1)',
+                        'rgba(246, 71, 71, 1)',
+                        'rgba(246, 71, 71, 1)',
+                    ]
+                }
+            ]
+        },
+        options: {
+            indexAxis: 'y',
+            elements: {
+                bar: {
+                    borderWidth: 2,
+                }
+            },
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false,
+                },
+            title: {
+                display: true,
+                text: 'Capital expenditure breakdown'
+                }
+            }
+        }
+    });
+
+    const labels = {{ cumulativeYears|safe }};
+    const dataset1 = {{ cumulativeDiscountCashflowOption1|safe }}; 
+    const dataset2 = {{ cumulativeDiscountCashflowOption2|safe }}; 
+    const dataset3 = {{ cumulativeDiscountCashflowOption3|safe }}; 
+    var minAxxisValue = dataset1[0] - 30000;
+
+    const ctx3 = document.getElementById('revenueOptionDiscountedOption3').getContext('2d');
+    const dataCumulative = {
+        labels: labels,
+        datasets: [
+        {
+                label: 'Cumulative Discounted Cashflow(Option 1)',
+                data: dataset1,
+                borderColor: 'rgba(240, 140, 0, 1)',
+                backgroundColor: 'rgba(240, 140, 0, 1)',
+                yAxisID: 'y'
+            },
+            {
+                label: 'Cumulative Discounted Cashflow(Option 2)',
+                data: dataset2,
+                borderColor: 'rgba(38, 199, 0, 1)',
+                backgroundColor: 'rgba(38, 199, 0, 1)',
+                yAxisID: 'y'
+            },
+            {
+                label: 'Cumulative Discounted Cashflow(Option 3)',
+                data: dataset3,
+                borderColor: 'rgba(38, 84, 222, 1)',
+                backgroundColor: 'rgba(38, 84, 222, 1)',
+                yAxisID: 'y'
+            },
+        ]
+    };
+    const myChart3 = new Chart(ctx3, {
+        type: 'line',
+        data: dataCumulative,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Revenue option discounted cashflow'
+                }
+            },
+            scales: {
+                y: {
+                   beginAtZero: true,
+                   min : minAxxisValue
+                },
+            }
+        },
+    });
+
+    const labelsNPVIRR = ['Option 1','Option 2', 'Option 3'];
+    const preTaxNPVOption1 = {{preTaxNPVOption1Chart|safe}}; 
+    const preTaxNPVOption2 = {{preTaxNPVOption2Chart|safe}}; 
+    const preTaxNPVOption3 = {{preTaxNPVOption3Chart|safe}}; 
+    const preTaxIRROption1 = {{preTaxIRROption1Chart|safe}}; 
+    const preTaxIRROption2 = {{preTaxIRROption2Chart|safe}}; 
+    const preTaxIRROption3 = {{preTaxIRROption3Chart|safe}};
+    const projectionPeriod = {{projectionPeriod|safe}}; 
+    var maxAxxisValue = 0;
+
+    if(preTaxIRROption2 > preTaxIRROption1){
+        maxAxxisValue = preTaxIRROption2 + 500;
+    }
+    else if(preTaxIRROption3 > preTaxIRROption2){
+        maxAxxisValue = preTaxIRROption3 + 500;
+    }
+    else{
+        maxAxxisValue = preTaxIRROption1 + 500;
+    }
+    
+    const ctx4 = document.getElementById('NPVIRR').getContext('2d');
+    const dataNPVIRR = {
+        labels: labelsNPVIRR,
+        datasets: [
+            {
+                label: 'Pre-tax Net Present Value (' + projectionPeriod + ' years)',
+                data: [preTaxNPVOption1,preTaxNPVOption2,preTaxNPVOption3],
+                borderColor: ['rgba(240, 140, 0, 0.38)', 'rgba(38, 199, 0, 0.38)', 'rgba(38, 84, 222, 0.38)'],
+                backgroundColor: ['rgba(240, 140, 0, 0.38)', 'rgba(38, 199, 0, 0.38)', 'rgba(38, 84, 222, 0.38)'],
+                order: 1,
+                yAxisID: 'y'
+            },
+            {
+                label: 'Pre-tax Internal Rate of Return (' + projectionPeriod + ' years)',
+                data: [preTaxIRROption1,preTaxIRROption2,preTaxIRROption3],
+                borderColor: 'rgba(255, 0, 0, 1)',
+                backgroundColor: 'rgba(255, 0, 0, 1)',
+                type: 'scatter',
+                order: 0,
+                yAxisID: 'y2'
+            }
+            /* {
+                label: 'Pre-tax Net Present Value (' + projectionPeriod + ' years)',
+                data: [preTaxNPVOption1,preTaxNPVOption2,preTaxNPVOption3],
+                borderColor: 'rgba(240, 140, 0, 0.38)',
+                backgroundColor: 'rgba(240, 140, 0, 0.38)',
+                stack: 'combined',
+                type: 'bar'
+            }, 
+            {
+                label: 'Dataset 2',
+                data: [preTaxIRROption1,preTaxIRROption2,preTaxIRROption3],
+                borderColor: 'rgba(255, 0, 0, 1)',
+                backgroundColor: 'rgba(255, 0, 0, 1)',
+                stack: 'combined'
+            }*/
+        ]
+    };
+    const myChart4 = new Chart(ctx4, {
+        type: 'bar',
+        data: dataNPVIRR,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Revenue options NPV & IRR'
+                }
+            },
+            scales: {
+                y: {
+                    type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                    position: 'left',
+                },
+                y2: {
+                    type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                    position: 'right',
+                    reverse: false,
+                    beginAtZero: true,
+                    max: maxAxxisValue,
+                    ticks: {
+                        stepSize: 500
+                    },
+                    grid: {
+                        drawOnChartArea: false // only want the grid lines for one axis to show up
+                    }
+                }
+            }
+        },
+    });
+</script>
+
+{%endblock content%}

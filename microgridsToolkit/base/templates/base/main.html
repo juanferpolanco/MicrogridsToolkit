@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{%  static 'img/planet.ico' %}">
+    <!--BOOTSTRAP 5-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js" integrity="sha384-oesi62h0Lfzrys4LxRF630JCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymouse"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9I0Yy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymouse"></script>
+    <!--CHART JS-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.esm.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.esm.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/helpers.esm.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/helpers.esm.min.js"></script>
+    <!--SWEETALERT-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.all.min.js"></script>
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.min.css'>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!--OWN CSS-->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
+    <!--OWN JAVASCRIPT-->
+    {% comment %} <script src="{% static 'javascript/alerts.js' %}"></script> {% endcomment %}
+
+    <title>Microgrids Toolkit</title>
+</head>
+<body>
+  {% if request.user.is_authenticated %}
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'menu' %}">Microgrid Toolkit</a>
+
+        {% if 'general' in request.path or 'plantExpenditure' in request.path or 'revenueElectricity' in request.path or 'co2' in request.path %}
+
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#inputDropdown" aria-controls="inputDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="inputDropdown">
+            <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+              <ul class="navbar-nav">
+                <li class="nav-item active">
+                  <a class="nav-link" href="{% url 'general' id %}">General</a>
+                </li>
+                <li class="nav-item active">
+                  <a class="nav-link" href="{% url 'plantExpenditure' id %}">Plant Expenditure</a>
+                </li>
+                <li class="nav-item active">
+                  <a class="nav-link" href="{% url 'revenueElectricity' id %}">Revenue Electricity</a>
+                </li>
+                <li class="nav-item active">
+                  <a class="nav-link" href="{% url 'co2' id %}">Co2</a>
+                </li>
+              </ul>
+            </ul> 
+          </div>
+
+        {% endif %}
+        
+        {% if 'results' in request.path %}
+
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#resultsDropdown" aria-controls="resultsDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="resultsDropdown">
+            <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+              <ul class="navbar-nav">
+                <li class="nav-item active">
+                  <a class="nav-link" href="{% url 'resultsOverview' id %}">Project Overview</a>
+                </li>
+                <li class="nav-item active">
+                  <a class="nav-link" href="{% url 'resultsCarbon' id %}">Carbon Results</a>
+                </li>
+                <li class="nav-item active">
+                  <a class="nav-link" href="{% url 'resultsEconomic' id %}">Economic Results</a>
+                </li>
+              </ul>
+            </ul> 
+          </div>
+        {% endif %}
+
+        <div>
+          <form class="d-flex">    
+            <a class="navbar-brand" aria-current="page" href="#">Welcome {{ request.user }}</a>
+            <a class="btn btn-primary" href="{% url 'logout' %}" role="button">Logout</a>
+          </form>
+        </div>
+      </div>
+    </nav>
+  {% endif %}
+  <br>
+  <br>
+  <br>
+
+  <div class="container">
+    <div class="container-box">
+
+      {% if 'results' in request.path or 'general' in request.path or 'plantExpenditure' in request.path or 'revenueElectricity' in request.path or 'co2' in request.path %}
+        <div class="d-flex flex-row align-items-center justify-content-around" style="margin-top: 15px">
+          <div class="p-2 justify-content-start"></div>
+          {% block title %}
+          {% endblock title %}
+          <div class="p-2 flex-shrink-1 justify-content-end">
+            <a class="btn btn-danger" style="display:flex; justify-content: flex-end;" href="{% url 'project-details' id %}" role="button">Return</a>
+          </div>
+        </div>
+      {% endif %}
+      {% if messages %}
+        {% for m in messages %}
+          <script>
+            Swal.fire({
+              "title": "{{m}}",
+              "icon": "success"
+            })
+          </script>
+        {% endfor %}
+      {% endif %}
+      {% block content %}
+
+      {% endblock content %}
+    </div>
+  </div>
+
+</body>
+
+</html>

@@ -1,0 +1,110 @@
+{% extends 'base/main.html' %}
+
+{% block title %}
+    <div class="p-2" style="display:flex; justify-content: flex-center"><h1>Co2</h1></div>
+{% endblock title %}
+
+{% block content %}
+
+<style>
+    .container-box{
+        padding: 15px 30px 0px 30px;
+    }
+</style>
+
+<hr>
+
+<div class="d-flex align-items-start">
+    <div class="nav flex-column nav-pills me-5" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <button class="nav-link active" id="v-pills-carbonfactor-tab" data-bs-toggle="pill" data-bs-target="#v-pills-carbonfactor" type="button" role="tab" aria-controls="v-pills-carbonfactor" aria-selected="true">Carbon Factor</button>
+    </div>
+
+    <div class="tab-content" id="v-pills-tabContent">
+        <div class="tab-pane fade show active" id="v-pills-carbonfactor" role="tabpanel" aria-labelledby="v-pills-sizeplant-tab">
+            <form action="{% url 'co2Carbon' id %}" method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col">
+                        <label for="co2_CurrentFactor" class="form-label">Current grid carbon factor</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="co2_CurrentFactor" value="{{queryCo2.co2_CurrentFactor}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> 
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="co2_CurrentFactorUnit" value="{{queryCo2.co2_CurrentFactorUnit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="co2_Diesel" class="form-label">Diesel</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" aria-describedby="co2_Diesel" name="co2_Diesel" value="{{queryCo2.co2_Diesel}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> 
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="co2_DieselUnit" value="{{queryCo2.co2_DieselUnit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="co2_WoodLogs" class="form-label">Wood logs</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" aria-describedby="co2_WoodLogs" name="co2_WoodLogs" value="{{queryCo2.co2_WoodLogs}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> 
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="co2_WoodLogsUnit" value="{{queryCo2.co2_WoodLogsUnit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="co2_Kerosene" class="form-label">Kerosene</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" aria-describedby="co2_Kerosene" name="co2_Kerosene" value="{{queryCo2.co2_Kerosene}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> 
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="co2_KeroseneUnit" value="{{queryCo2.co2_KeroseneUnit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="co2_ProductionPerLitre" class="form-label">kWh produced per litre of kerosene burned</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" aria-describedby="co2_ProductionPerLitre" name="co2_ProductionPerLitre" value="{{queryCo2.co2_ProductionPerLitre}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> 
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="co2_ProductionPerLitreUnit" value="{{queryCo2.co2_ProductionPerLitreUnit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="co2_EmissionCar" class="form-label">Emission from an average car</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" aria-describedby="co2_EmissionCar" name="co2_EmissionCar" value="{{queryCo2.co2_EmissionCar}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"> 
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="co2_EmissionCarUnit" value="{{queryCo2.co2_EmissionCarUnit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" name="co2_Notes" id="co2_Notes" rows="3">{{queryCo2.co2_Notes}}</textarea>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="source" class="form-label">Source</label>
+                        <textarea class="form-control" name="co2_Source" id="co2_Source" rows="3">{{queryCo2.co2_Source}}</textarea>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button style="float: right;" type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

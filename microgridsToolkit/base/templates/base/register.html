@@ -1,0 +1,70 @@
+{%extends 'base/main.html'%}
+{% load crispy_forms_tags %} 
+{%block content%}
+
+<style>
+  body {
+    background: #007bff;
+    background: linear-gradient(to right, #0062e6, #33aeff);
+    background-image: 
+  }
+
+  .btn-login {
+    font-size: 0.9rem;
+    letter-spacing: 0.05rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .row{
+    margin-top: 107px;
+  }
+  .bgImage{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    margin-top: -179px;
+    margin-left: -312px;
+  }
+
+  .bg-image{
+    height: 100vh;
+    width: 100%;
+    
+    background-repeat: no-repeat;
+    background-position: center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    margin-top: -184px;
+    z-index:105;
+    
+  }
+
+</style>
+{% comment %} <img src="../static/img/bg6.png" class="bgImage" alt="background"> {% endcomment %}
+{% comment %} <div class="bg-image" style="background-image: url('../static/img/bg0.jpg');">
+</div> {% endcomment %}
+
+<body>
+  <div class="container">
+    <div class="row" style="margin-top: 15px;">
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+        <div class="card border-0 shadow rounded-3 my-5">
+          <div class="card-body p-4 p-sm-5">
+            <h5 class="card-title text-center mb-3 fw-light fs-5">Register</h5>
+            <form method="POST">
+              {% csrf_token %} 
+              {{form|crispy}}
+              <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+            <hr>
+            <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+{%endblock content%}

@@ -1,0 +1,599 @@
+{% extends 'base/main.html' %}
+
+{% block title %}
+    <div class="p-2 flex-shrink-1 justify-content-center" style="display:flex; justify-content: flex-center"><h1>Plant expenditure and information</h1></div>
+{% endblock title %}
+
+{% block content %}
+
+<style>
+    .container-box{
+        padding: 15px 30px 0px 30px;
+    }
+</style>
+
+<hr>
+
+<div class="d-flex align-items-start justify-content-start">
+    <div class="nav flex-column nav-pills me-5" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <button class="nav-link active" id="v-pills-sizeplant-tab" data-bs-toggle="pill" data-bs-target="#v-pills-sizeplant" type="button" role="tab" aria-controls="v-pills-sizeplant" aria-selected="true">Details regarding the size of the plant</button>
+        <button class="nav-link" id="v-pills-capital-tab" data-bs-toggle="pill" data-bs-target="#v-pills-capital" type="button" role="tab" aria-controls="v-pills-capital" aria-selected="false">Capital Expenditure</button>
+        <button class="nav-link" id="v-pills-operational-tab" data-bs-toggle="pill" data-bs-target="#v-pills-operational" type="button" role="tab" aria-controls="v-pills-operational" aria-selected="false">Operational Expenditure</button>
+        <button class="nav-link" id="v-pills-replacement-tab" data-bs-toggle="pill" data-bs-target="#v-pills-replacement" type="button" role="tab" aria-controls="v-pills-replacement" aria-selected="false">Replacement Expenditure</button>
+        <button class="nav-link" id="v-pills-subsidy-tab" data-bs-toggle="pill" data-bs-target="#v-pills-subsidy" type="button" role="tab" aria-controls="v-pills-subsidy" aria-selected="false">Subsidy</button>
+    </div>
+    <div class="tab-content" id="v-pills-tabContent">
+        <div class="tab-pane fade show active" id="v-pills-sizeplant" role="tabpanel" aria-labelledby="v-pills-sizeplant-tab">
+            <form action="{% url 'plantDetails' id %}" method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col">
+                        <label for="sizeplantInput" class="form-label">Size of the plant</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_PlantSize" value="{{queryDet.pla_PlantSize}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_PlantSizeUnit" value="{{queryDet.pla_PlantSizeUnit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="sizebatteryInput" class="form-label">Size of the battery</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_BatterySize" value="{{queryDet.pla_BatterySize}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_BatterySizeUnit" value="{{queryDet.pla_BatterySizeUnit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="annualdegradationInput" class="form-label">Annual degradation</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_AnnualDegradation" value="{{queryDet.pla_AnnualDegradation}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_AnnualDegradationUnit" value="{{queryDet.pla_AnnualDegradationUnit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="averagegenerationInput" class="form-label">Average daily kWh generation per kWp</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_DailyGeneration" value="{{queryDet.pla_DailyGeneration}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_DailyGenerationUnit" value="{{queryDet.pla_DailyGenerationUnit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" name="pla_Notes" id="notes" rows="3">{{queryDet.pla_Notes}}</textarea>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="source" class="form-label">Source</label>
+                        <textarea class="form-control" name="pla_Source" id="source" rows="3">{{queryDet.pla_Source}}</textarea>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button style="float: right;" type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="tab-pane fade" id="v-pills-capital" role="tabpanel" aria-labelledby="v-pills-capital-tab">
+            <form action="{% url 'plantCapital' id %}" method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col">
+                        <label for="landInput" class="form-label">Land</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_Land" value="{{queryCap.pla_Land}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_LandUnit" value="{{currency}}" placeholder="Units"  style="margin-top: 32px; width:245px; text-align: center" readonly>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="panelsturbinesInput" class="form-label">PV panels, turbines, etc.</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_PanelsTurbines" value="{{queryCap.pla_PanelsTurbines}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_PanelsTurbinesUnit" value="{{currency}}" placeholder="Units" style="margin-top: 32px; width:245px; text-align: center" readonly>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="switchgearInput" class="form-label">Switchgear</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_Switchgear" value="{{queryCap.pla_Switchgear}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_SwitchgearUnit" value="{{currency}}" placeholder="Units" style="margin-top: 32px; width:245px; text-align: center" readonly>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="protectionsystemInput" class="form-label">Protection System</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_ProtectionSystem" value="{{queryCap.pla_ProtectionSystem}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_ProtectionSystemUnit" value="{{currency}}" placeholder="Units" style="margin-top: 32px; width:245px; text-align: center" readonly>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="transformerInput" class="form-label">Transformer</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_Transformer" value="{{queryCap.pla_Transformer}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_TransformerUnit" value="{{currency}}" placeholder="Units" style="margin-top: 32px; width:245px; text-align: center" readonly>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="wiringInput" class="form-label">Wiring</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_Wiring" value="{{queryCap.pla_Wiring}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_WiringUnit" value="{{currency}}" placeholder="Units" style="margin-top: 32px; width:245px; text-align: center" readonly>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="metersInput" class="form-label">Meters</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_Meters" value="{{queryCap.pla_Meters}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_MetersUnit" value="{{currency}}" placeholder="Units" style="margin-top: 32px; width:245px; text-align: center" readonly>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="batteriesInput" class="form-label">Batteries</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_Batteries" value="{{queryCap.pla_Batteries}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_BatteriesUnit" value="{{currency}}" placeholder="Units" style="margin-top: 32px; width:245px; text-align: center" readonly>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="invertersInput" class="form-label">Inverters</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_Inverters" value="{{queryCap.pla_Inverters}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+                        
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_InvertersUnit" value="{{currency}}" placeholder="Units" style="margin-top: 32px; width:245px; text-align: center" readonly>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="controlsetupcostInput" class="form-label">Cost of a control setup</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_ControlCost" value="{{queryCap.pla_ControlCost}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_ControlCostUnit" value="{{currency}}" placeholder="Units" style="margin-top: 32px; width:245px; text-align: center" readonly>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="transportationcostInput" class="form-label">Transportation and last mile costs</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_TransportationCost" value="{{queryCap.pla_TransportationCost}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_TransportationCostUnit" value="{{currency}}" placeholder="Units" style="margin-top: 32px; width:245px; text-align: center" readonly>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="constructioncostInput" class="form-label">Construction and surveys + other upfront project development costs</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_ConstructionCost" value="{{queryCap.pla_ConstructionCost}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_ConstructionCostUnit" value="{{currency}}" placeholder="Units" style="margin-top: 56px; width:245px; text-align: center" readonly>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="ancillarycostInput" class="form-label">Ancillary costs (such as for bulbs, fans, etc.)</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_AncillaryCost" value="{{queryCap.pla_AncillaryCost}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_AncillaryCostUnit" value="{{currency}}" placeholder="Units" style="margin-top: 32px; width:245px; text-align: center" readonly>
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="installationcostInput" class="form-label">Installation cost</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_InstallationCost" value="{{queryCap.pla_InstallationCost}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_InstallationCostUnit" value="{{queryCap.pla_InstallationCostUnit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" name="pla_Notes" id="notes" rows="3">{{queryCap.pla_Notes}}</textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="source" class="form-label">Source</label>
+                        <textarea class="form-control" name="pla_Source" id="source" rows="3">{{queryCap.pla_Source}}</textarea>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button style="float: right;" type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="tab-pane fade" id="v-pills-operational" role="tabpanel" aria-labelledby="v-pills-operational-tab">
+            <form action="{% url 'plantOperational' id %}" method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col">
+                        <label for="operationalexpenditureInput" class="form-label">Yearly total operational expenditure</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_OperationalExpenditure" value="{{queryOpe.pla_OperationalExpenditure}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_OperationalExpenditureUnit" value="{{queryOpe.pla_OperationalExpenditureUnit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="omescalatorInput" class="form-label">Yearly O&M Escalator (%)</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_OMEscalator" value="{{queryOpe.pla_OMEscalator}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_OMEscalatorUnit" value="{{queryOpe.pla_OMEscalatorUnit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" name="pla_Notes" id="notes" rows="3">{{queryOpe.pla_Notes}}</textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="source" class="form-label">Source</label>
+                        <textarea class="form-control" name="pla_Source" id="source" rows="3">{{queryOpe.pla_Source}}</textarea>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button style="float: right;" type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>
+        <div class="tab-pane fade" id="v-pills-replacement" role="tabpanel" aria-labelledby="v-pills-replacement-tab">
+            <form action="{% url 'plantReplacement' id %}" method="POST">
+                {% csrf_token %}
+                {% comment %} <div class="row">
+                    <div class="col">
+                        <label for="microgridplantexpansionsInput" class="form-label">Number of microgrid plant size expansions</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_NumberExpansions" value="{{queryRep.pla_NumberExpansions}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                    </div>
+                </div>
+                <br> {% endcomment %}
+                <div class="row">
+                    <div class="col">
+                        <label for="firstyearInput" class="form-label">Year of first expansion / battery replacement</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_FirstExpansion" value="{{queryRep.pla_FirstExpansion}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="secondyearInput" class="form-label">Year of second expansion / battery replacement</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_SecondExpansion" value="{{queryRep.pla_SecondExpansion}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="thirdyearInput" class="form-label">Year of third expansion / battery replacement</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_ThirdExpansion" value="{{queryRep.pla_ThirdExpansion}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                </div>
+                <h5 style="text-align-last: left; padding-top: 30px;">First expansion</h5>
+                <div class="row">
+                    <div class="col">
+                        <label for="firstplantsizeInput" class="form-label">First expansion plant size added</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_FirstPlantAdded" value="{{queryRep.pla_FirstPlantAdded}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_FirstPlantAddedUnit" value="{{queryRep.pla_FirstPlantAddedUnit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="firsttotalexpenditureInput" class="form-label">First expansion total expenditure - excluding batteries</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_FirstTotalExpenditure" value="{{queryRep.pla_FirstTotalExpenditure}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_FirstTotalExpenditureUnit" value="{{currency}}" placeholder="Units" style="margin-top: 32px; width:245px; text-align: center" readonly>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="firstbatteriessizeInput" class="form-label">First expansion - Projected size of batteries new capacity (expansion)</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_FirstBatteriesSize" value="{{queryRep.pla_FirstBatteriesSize}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_FirstBatteriesSizeUnit" value="{{queryRep.pla_FirstBatteriesSizeUnit}}" placeholder="Units" style="margin-top: 56px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="firstbatteriescostnewInput" class="form-label">First expansion - Projected cost of batteries new capacity (expansion)</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_FirstBatteriesCost" value="{{queryRep.pla_FirstBatteriesCost}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_FirstBatteriesCostUnit" value="{{currency}}" placeholder="Units" style="margin-top: 56px; width:245px; text-align: center" readonly>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="firstbatteriescostreplacedInput" class="form-label">First expansion - Projected cost of batteries when replaced (REPEX)</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_FirstBatteriesReplaced" value="{{queryRep.pla_FirstBatteriesReplaced}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_FirstBatteriesReplacedUnit" value="{{currency}}" placeholder="Units" style="margin-top: 32px; width:245px; text-align: center" readonly>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="firsthomesaddedInput" class="form-label">First expansion - number of homes added</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_FirstHomesAdded" value="{{queryRep.pla_FirstHomesAdded}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="firstcommercialaddedInput" class="form-label">First expansion - number of commercial properties added</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_FirstCommercialAdded" value="{{queryRep.pla_FirstCommercialAdded}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                </div>
+                <h5 style="text-align-last: left; padding-top: 30px;">Second expansion</h5>
+                <div class="row">
+                    <div class="col">
+                        <label for="secondplantsizeInput" class="form-label">Second expansion plant size added</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_SecondPlantAdded" value="{{queryRep.pla_SecondPlantAdded}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_SecondPlantAddedUnit" value="{{queryRep.pla_SecondPlantAddedUnit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="secondtotalexpenditureInput" class="form-label">Second expansion total expenditure - excluding batteries</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_SecondTotalExpenditure" value="{{queryRep.pla_SecondTotalExpenditure}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_SecondTotalExpenditureUnit" value="{{currency}}" placeholder="Units" style="margin-top: 32px; width:245px; text-align: center" readonly>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="secondbatteriessizeInput" class="form-label">Second expansion - Projected size of batteries new capacity (expansion)</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_SecondBatteriesSize" value="{{queryRep.pla_SecondBatteriesSize}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_SecondBatteriesSizeUnit" value="{{queryRep.pla_SecondBatteriesSizeUnit}}" placeholder="Units" style="margin-top: 56px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="secondbatteriescostInput" class="form-label">Second expansion - Projected cost of batteries new capacity (expansion)</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_SecondBatteriesCost" value="{{queryRep.pla_SecondBatteriesCost}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_SecondBatteriesCostUnit" value="{{currency}}" placeholder="Units" style="margin-top: 56px; width:245px; text-align: center" readonly>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="secondbatteriescostreplacedInput" class="form-label">Second expansion - Projected cost of batteries when replaced (REPEX)</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_SecondBatteriesReplaced" value="{{queryRep.pla_SecondBatteriesReplaced}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_SecondBatteriesReplacedUnit" value="{{currency}}" placeholder="Units" style="margin-top: 56px; width:245px; text-align: center" readonly>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="secondhomesaddedInput" class="form-label">Second expansion - number of homes added</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_SecondHomesAdded" value="{{queryRep.pla_SecondHomesAdded}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="secondcommercialaddedInput" class="form-label">Second expansion - number of commercial properties added</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_SecondCommercialAdded" value="{{queryRep.pla_SecondCommercialAdded}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                </div>
+                <h5 style="text-align-last: left; padding-top: 30px;">Third expansion</h5>
+                <div class="row">
+                    <div class="col">
+                        <label for="thirdplantsizeInput" class="form-label">Third expansion plant size added</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_ThirdPlantAdded" value="{{queryRep.pla_ThirdPlantAdded}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_ThirdPlantAddedUnit" value="{{queryRep.pla_ThirdPlantAddedUnit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="thirdtotalexpenditureInput" class="form-label">Third expansion total expenditure - excluding batteries</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_ThirdTotalExpenditure" value="{{queryRep.pla_ThirdTotalExpenditure}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_ThirdTotalExpenditureUnit" value="{{currency}}" placeholder="Units" style="margin-top: 32px; width:245px; text-align: center" readonly>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="thirdbatteriessizeInput" class="form-label">Third expansion - Projected size of batteries new capacity (expansion)</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_ThirdBatteriesSize" value="{{queryRep.pla_ThirdBatteriesSize}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_ThirdBatteriesSizeUnit" value="{{queryRep.pla_ThirdBatteriesSizeUnit}}" placeholder="Units" style="margin-top: 56px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="thirdbatteriescostInput" class="form-label">Third expansion - Projected cost of batteries new capacity (expansion)</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_ThirdBatteriesCost" value="{{queryRep.pla_ThirdBatteriesCost}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_ThirdBatteriesCostUnit" value="{{currency}}" placeholder="Units" style="margin-top: 56px; width:245px; text-align: center" readonly>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="thirdbatteriescostreplacedInput" class="form-label">Third expansion - Projected cost of batteries when replaced (REPEX)</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_ThirdBatteriesReplaced" value="{{queryRep.pla_ThirdBatteriesReplaced}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_ThirdBatteriesReplacedUnit" value="{{currency}}" placeholder="Units" style="margin-top: 32px; width:245px; text-align: center" readonly>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="thirdhomesaddedInput" class="form-label">Third expansion - number of homes added</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_ThirdHomesAdded" value="{{queryRep.pla_ThirdHomesAdded}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="thirdcommercialaddedInput" class="form-label">Third expansion - number of commercial properties added</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_ThirdCommercialAdded" value="{{queryRep.pla_ThirdCommercialAdded}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" name="pla_Notes" id="notes" rows="3">{{queryRep.pla_Notes}}</textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="source" class="form-label">Source</label>
+                        <textarea class="form-control" name="pla_Source" id="source" rows="3">{{queryRep.pla_Source}}</textarea>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button style="float: right;" type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>
+        <div class="tab-pane fade" id="v-pills-subsidy" role="tabpanel" aria-labelledby="v-pills-subsidy-tab">
+            <form action="{% url 'plantSubsidy' id %}" method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col">
+                        <label for="subsidyoncapitalInput" class="form-label">Subsidy on capital expenditure</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_SubsidyCapital" value="{{querySub.pla_SubsidyCapital}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_SubsidyCapitalUnit" value="{{querySub.pla_SubsidyCapitalUnit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="subsidyonoperationalInput" class="form-label">Subsidy on operational expenditure</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_SubsidyOperational" value="{{querySub.pla_SubsidyOperational}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_SubsidyOperationalUnit"  value="{{querySub.pla_SubsidyOperationalUnit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="subsidyonreplacementInput" class="form-label">Subsidy on replacement expenditure</label>
+                        <input type="text" style="margin-right: 10px;" class="form-control" name="pla_SubsidyReplacement" value="{{querySub.pla_SubsidyReplacement}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">  
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="pla_SubsidyReplacementUnit" value="{{querySub.pla_SubsidyReplacementUnit}}" placeholder="Units" style="margin-top: 32px; text-align: center">
+                    </div>
+                </div>
+                
+                <br>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" name="pla_Notes" id="notes" rows="3">{{querySub.pla_Notes}}</textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="source" class="form-label">Source</label>
+                        <textarea class="form-control" name="pla_Source" id="source" rows="3">{{querySub.pla_Source}}</textarea>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button style="float: right;" type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

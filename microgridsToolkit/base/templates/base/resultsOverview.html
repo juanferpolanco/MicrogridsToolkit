@@ -1,0 +1,188 @@
+{%extends 'base/main.html'%}
+
+{% block title %}
+    <div class="p-2 flex-shrink-1 justify-content-center" style="display:flex; justify-content: flex-center"><h1>Project Overview</h1></div>
+{% endblock title %}
+
+{%block content%}
+
+<style>
+    .container-box{
+        padding: 10px 25px 50px 25px;
+        margin: 0px -160px 20px -160px;
+    }
+</style>
+
+<div style="padding-top: 10px">
+    <hr style="margin: 0px;">
+    <div class="row"><!--style="padding-top: 17px;  margin: 0px -60px 0px -136px"-->
+        <div>
+            <h3>Key Scenario Info</h3>
+        </div>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Value</th>
+                    <th scope="col">Unit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="text-align:left">Name of settlement</td>
+                    <td>{{settlementName}}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td style="text-align:left">Region/State/Country name</td>
+                    <td>{{stateName}}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td style="text-align:left">Country</td>
+                    <td>{{country}}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td style="text-align:left">Currency</td>
+                    <td>{{currency}}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td style="text-align:left">Starting Year</td>
+                    <td>{{startingYear}}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td style="text-align:left">Projection Period</td>
+                    <td>{{projectionPeriod}}</td>
+                    <td>{{projectionPeriodUnit}}</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left">Discount rate of the project</td>
+                    <td>{{discountRate}}</td>
+                    <td>{{discountRateUnit}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="row"><!--style="padding-top: 14px; margin: 0px -132px 0px -144px"-->
+        <div class="col-6" style="margin-left: 0px">
+            <div>
+                <h3>&nbsp;Year-1 Connections</h3>
+            </div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Value</th>
+                        <th scope="col">Unit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="text-align:left">Residential properties in settlement</td>
+                        <td>{{residentialProperties}}</td>
+                        <td>{{residentialPropertiesUnit}}</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:left">Residential properties to be connected</td>
+                        <td>{{residentialConnected}}</td>
+                        <td>{{residentialConnectedUnit}}</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:left">Commercial properties in settlement</td>
+                        <td>{{commercialProperties}}</td>
+                        <td>{{commercialPropertiesUnit}}</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:left">Commercial properties to be connected</td>
+                        <td>{{commercialConnected}}</td>
+                        <td>{{commercialConnectedUnit}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-6"><!--style="margin-left: -34px; widtd: 820px;"-->
+            <div class="container" style="width: 40%; display: flex; align-items: center; justify-content: center;">
+                <canvas id="residentialChart" width="20" height="20"></canvas>
+                <div style="padding: 30px;"></div>
+                <canvas id="commercialChart" width="20" height="20"></canvas>
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
+</div>
+<script>
+    var residentialConnected = "{{residentialConnected}}";
+    var residentialNotConnected = "{{residentialNotConnected}}";
+    var commercialConnected = "{{commercialConnected}}";
+    var commercialNotConnected = "{{commercialNotConnected}}";
+
+    const ctx1 = document.getElementById('residentialChart').getContext('2d');
+    const myChart1 = new Chart(ctx1, {
+        type: 'pie',
+        data: {
+            labels: ['Residential connected', 'Residential not connected'],
+            datasets: [{
+                label: 'Residentail',
+                data: [residentialConnected, residentialNotConnected],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                display: true,
+                text: 'Year-1 Residential Connections',
+                }
+            }
+        }
+    });
+
+    const ctx2 = document.getElementById('commercialChart').getContext('2d');
+    const myChart2 = new Chart(ctx2, {
+        type: 'pie',
+        data: {
+            labels: ['Commercial connected', 'Commercial not connected'],
+            datasets: [{
+                label: 'Commercial',
+                data: [commercialConnected, commercialNotConnected],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                display: true,
+                text: 'Year-1 Commercial Connections',
+                }
+            }
+        }
+    });
+</script>
+
+{%endblock content%}
+
